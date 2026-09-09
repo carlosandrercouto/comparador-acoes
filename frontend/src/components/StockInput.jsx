@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, X, Activity } from 'lucide-react';
+import { Search, X } from 'lucide-react';
+import logo from '../assets/logo.svg';
 
 export default function StockInput({ tickers, setTickers, onAnalyze }) {
   const [inputValue, setInputValue] = useState('');
@@ -25,12 +26,12 @@ export default function StockInput({ tickers, setTickers, onAnalyze }) {
     <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[60vh]">
       <div className="text-center mb-10">
         <div className="flex justify-center mb-4">
-          <div className="p-4 bg-emerald-500/10 rounded-full">
-            <Activity className="w-10 h-10 text-emerald-500" />
+          <div className="w-20 h-20 flex items-center justify-center">
+            <img src={logo} alt="Gemini Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]" />
           </div>
         </div>
         <h1 className="text-4xl font-bold text-slate-100 mb-4 tracking-tight">
-          Comparador buy and hold
+          Comparador de ações
         </h1>
         <p className="text-slate-400 text-lg max-w-lg mx-auto">
           Adicione de 1 a 6 ações para uma análise fundamentalista focada em aposentadoria e renda passiva.
