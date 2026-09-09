@@ -12,8 +12,9 @@ export default function ComparisonTable({ tickers, onBack }) {
     async function fetchData() {
       setLoading(true);
       try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
         const promises = tickers.map(t => 
-          fetch(`http://localhost:8000/api/stocks/${t}`)
+          fetch(`${apiUrl}/api/stocks/${t}`)
             .then(res => {
               if (!res.ok) throw new Error(`Falha ao buscar ${t}`);
               return res.json();
