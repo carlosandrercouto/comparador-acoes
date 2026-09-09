@@ -194,6 +194,24 @@ export default function ComparisonTable({ tickers, onBack }) {
                 ))}
               </tr>
 
+              {/* P/VP */}
+              <tr className="hover:bg-slate-800/20 transition-colors">
+                <td className="p-4 text-sm text-slate-300">
+                  <Tooltip message="Preço / Valor Patrimonial. Deve ser analisado junto com o ROE para evitar Value Traps.">
+                    P/VP
+                  </Tooltip>
+                </td>
+                {stocksData.map((item, idx) => (
+                  <td key={idx} className="p-4 text-center border-l border-slate-800/50">
+                    <ScoreBadge 
+                      status={item.analysis.pvp?.status} 
+                      value={`${item.data.valuation?.pvp?.toFixed(2) || '-'}`} 
+                      tooltipMsg={item.analysis.pvp?.message}
+                    />
+                  </td>
+                ))}
+              </tr>
+
               {/* DY */}
               <tr className="hover:bg-slate-800/20 transition-colors">
                 <td className="p-4 text-sm text-slate-300">
@@ -221,11 +239,11 @@ export default function ComparisonTable({ tickers, onBack }) {
                 {stocksData.map((item, idx) => (
                   <td key={idx} className="p-5 text-center border-l border-slate-800/50">
                     <div className="flex flex-col items-center">
-                      <span className={`text-3xl font-black ${item.score >= 4 ? 'text-emerald-400' : item.score >= 2 ? 'text-amber-400' : 'text-rose-400'}`}>
-                        {item.score}/5
+                      <span className={`text-3xl font-black ${item.score >= 7.0 ? 'text-emerald-400' : item.score >= 5.0 ? 'text-amber-400' : 'text-rose-400'}`}>
+                        {item.score.toFixed(1)} / 10
                       </span>
                       <span className="text-xs text-slate-500 font-medium uppercase mt-1 tracking-wider">
-                        Pontos
+                        Nota
                       </span>
                     </div>
                   </td>

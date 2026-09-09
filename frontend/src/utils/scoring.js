@@ -19,12 +19,13 @@ export function calculateScore(stock) {
 
   // Histórico de Lucros (5 anos)
   const todosAnosPositivos = stock.consistencia_lucros?.todos_anos_positivos;
+  let hasHistoricLoss = false;
   if (todosAnosPositivos) {
     score += 1;
     analysis.lucros = { status: 'green', message: 'Lucros consistentes nos últimos 5 anos (+1 ponto)' };
   } else {
-    analysis.lucros = { status: 'red', message: 'Histórico de prejuízo (ALERTA VERMELHO)' };
-    score = 0; // Zera o score
+    hasHistoricLoss = true;
+    analysis.lucros = { status: 'red', message: 'Histórico de prejuízo (ALERTA VERMELHO: Zera a nota final)' };
   }
 
   // Dívida Líquida / EBITDA
@@ -72,8 +73,33 @@ export function calculateScore(stock) {
     analysis.dy = { status: 'yellow', message: 'DY abaixo de 6%' };
   }
 
+  // P/VP cruzado com ROE
+  const pvp = stock.valuation?.pvp;
+  if (pvp !== null && pvp !== undefined && roe !== null && roe !== undefined) {
+    if ((pvp < 1.5 && roe > 10) || (pvp > 1.5 && roe > 15)) {
+      score += 1;
+      analysis.pvp = { status: 'green', message: 'Relação P/VP e ROE atrativa (+1 ponto)' };
+    } else if (pvp < 1.0 && roe < 10) {
+      score -= 1;
+      analysis.pvp = { status: 'red', message: 'Alerta de Value Trap (P/VP < 1 e ROE baixo) (-1 ponto)' };
+    } else {
+      analysis.pvp = { status: 'yellow', message: 'P/VP dentro da normalidade para o ROE atual' };
+    }
+  } else {
+    analysis.pvp = { status: 'yellow', message: 'Dados de P/VP ou ROE indisponíveis' };
+  }
+
+  // Calculo Final do Score (Escala 0 a 10)
+  let rawScore = Math.max(0, score);
+  let finalScore = (rawScore / 7) * 10;
+  
+  if (hasHistoricLoss) {
+    finalScore = 0;
+  }
+
   return {
-    score,
+    score: finalScore,
+    rawScore: score,
     analysis
   };
 }
