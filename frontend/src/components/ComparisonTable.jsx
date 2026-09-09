@@ -63,7 +63,7 @@ export default function ComparisonTable({ tickers, onBack }) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-8">
+    <div className="w-full max-w-[98%] xl:max-w-[1400px] mx-auto py-8 px-2 sm:px-6">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-100">Dashboard de Comparação</h2>
@@ -79,8 +79,8 @@ export default function ComparisonTable({ tickers, onBack }) {
       </div>
 
       <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto pb-2 custom-scrollbar">
+          <table className="w-full min-w-[800px] text-left border-collapse">
             <thead>
               <tr>
                 <th className="p-4 bg-slate-950/50 border-b border-slate-800 text-slate-400 font-semibold text-sm w-1/4">
@@ -133,9 +133,9 @@ export default function ComparisonTable({ tickers, onBack }) {
                 {stocksData.map((item, idx) => (
                   <td key={idx} className="p-4 text-center border-l border-slate-800/50">
                     <ScoreBadge 
-                      status={item.analysis.lucros?.status} 
+                      status={item.analysis.cagr?.status} 
                       value={`${item.data.consistencia_lucros?.cagr_lucro_5_anos?.toFixed(1) || '-'}%`} 
-                      tooltipMsg={item.analysis.lucros?.message}
+                      tooltipMsg={item.analysis.cagr?.message}
                     />
                   </td>
                 ))}

@@ -28,6 +28,22 @@ export function calculateScore(stock) {
     analysis.lucros = { status: 'red', message: 'Histórico de prejuízo (ALERTA VERMELHO: Zera a nota final)' };
   }
 
+  // CAGR de Lucros (5 anos)
+  const cagr = stock.consistencia_lucros?.cagr_lucro_5_anos;
+  if (cagr !== null && cagr !== undefined) {
+    if (cagr >= 5.0) {
+      score += 1;
+      analysis.cagr = { status: 'green', message: 'Crescimento saudável >= 5% (+1 ponto)' };
+    } else if (cagr >= 0.0) {
+      analysis.cagr = { status: 'yellow', message: 'Crescimento estagnado/baixo (0 pontos)' };
+    } else {
+      score -= 1;
+      analysis.cagr = { status: 'red', message: 'Lucros encolhendo (-1 ponto)' };
+    }
+  } else {
+    analysis.cagr = { status: 'yellow', message: 'Dado de CAGR indisponível' };
+  }
+
   // Dívida Líquida / EBITDA
   const divida = stock.solvencia?.divida_liquida_ebitda;
   const isUtility = setor.includes('energia') || setor.includes('saneamento') || setor.includes('utilidade');
@@ -91,7 +107,7 @@ export function calculateScore(stock) {
 
   // Calculo Final do Score (Escala 0 a 10)
   let rawScore = Math.max(0, score);
-  let finalScore = (rawScore / 7) * 10;
+  let finalScore = (rawScore / 8) * 10;
   
   if (hasHistoricLoss) {
     finalScore = 0;
