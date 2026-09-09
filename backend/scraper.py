@@ -66,7 +66,7 @@ def scrape_acao(ticker: str):
     if pl is not None and cagr_lucro is not None and cagr_lucro > 0:
         peg_ratio = round(pl / cagr_lucro, 2)
     
-    divida_ebitda = None if eh_banco else normalizar_float(get_indicador("DÍV. LÍQ. / EBITDA"))
+    divida_ebitda = None if eh_banco else normalizar_float(get_indicador("divida liquida/ebitda") or get_indicador("dívida líquida/ebitda") or get_indicador("dívida líquida / ebitda"))
     indice_basileia = normalizar_float(get_indicador("ÍNDICE DE BASILEIA")) if eh_banco else None
     
     # Mocking historical profits since finding tables in raw HTML requires traversing complex JS components in Investidor 10
