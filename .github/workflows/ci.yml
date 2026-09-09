@@ -1,0 +1,53 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # Pipeline do Backend (Python)
+  backend-ci:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Check Python Syntax (Flake8)
+      run: |
+        cd backend
+        pip install flake8
+        # Para a pipeline se houver erros de sintaxe graves ou variaveis indefinidas
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  # Pipeline do Frontend (Node.js/React)
+  frontend-ci:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+        
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Build React App (Vite)
+      run: |
+        cd frontend
+        npm run build
